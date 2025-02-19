@@ -137,7 +137,7 @@ public class Game {
     private static void findAndBattlePokemon() {
         Pokemon randomPokemon = trainer.findPokemon();
         Battle battle = new Battle(trainer.getActivePokemon(), randomPokemon, trainer);
-
+        System.out.println("z");
         battle.start();
     }
 
