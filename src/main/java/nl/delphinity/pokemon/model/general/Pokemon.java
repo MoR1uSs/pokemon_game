@@ -3,11 +3,12 @@ package nl.delphinity.pokemon.model.general;
 import nl.delphinity.pokemon.model.battle.Attack;
 import nl.delphinity.pokemon.model.trainer.Trainer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Pokemon {
+public class Pokemon implements Serializable {
 
     private final int maxPP;
     private final int currentPP;

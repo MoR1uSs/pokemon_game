@@ -9,13 +9,14 @@ import nl.delphinity.pokemon.model.general.PokemonType;
 import nl.delphinity.pokemon.model.item.Inventory;
 import nl.delphinity.pokemon.model.item.ItemType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 
-public class Trainer {
+public class Trainer implements Serializable {
     private final String name;
     private final ArrayList<Pokemon> pokemonCollection = new ArrayList<>();
     private final Inventory inventory = new Inventory();
@@ -131,7 +132,8 @@ public class Trainer {
 
     //TODO: US-PKM-O-11
     public void travel(Area area) {
-
+        setCurrentArea(area);
+        System.out.println("You are now in " + area.getName());
     }
 
     //TODO: US-PKM-O-3
@@ -172,10 +174,19 @@ public class Trainer {
 
     //TODO: US-PKM-O-10
     public void showBadges() {
+        if(!badges.isEmpty()){
+            System.out.println("Your badges: ");
+            badges.forEach(badge -> System.out.println(badge.getName()));
+        }
+        else{
+            System.out.println("You don't have any badges");
+        }
     }
 
     //TODO: US-PKM-O-9
     public void addBadge(Badge newBadge) {
+        badges.add(newBadge);
+        System.out.println("A badge was added to your collection");
     }
 
     //TODO: US-PKM-O-5:
@@ -190,7 +201,8 @@ public class Trainer {
     //TODO: US-PKM-O-12
     public void visitPokeCenter(Pokecenter pokecenter) {
         if(pokecenter != null){
-            // todo
+            List<Pokemon> pokemonToHeal = getPokemonCollection();
+            pokecenter.healPokemon(pokemonToHeal);
         }
     }
 }

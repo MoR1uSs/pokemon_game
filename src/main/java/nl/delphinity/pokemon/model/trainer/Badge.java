@@ -1,6 +1,8 @@
 package nl.delphinity.pokemon.model.trainer;
 
-public class Badge {
+import java.io.Serializable;
+
+public class Badge implements Serializable {
 
     private final String name;
 

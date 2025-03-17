@@ -1,8 +1,9 @@
 package nl.delphinity.pokemon.model.item;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Inventory {
+public class Inventory implements Serializable {
 
     protected final HashMap<ItemType, Integer> items;
 

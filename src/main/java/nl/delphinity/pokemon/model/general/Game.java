@@ -8,6 +8,8 @@ import nl.delphinity.pokemon.model.trainer.Badge;
 import nl.delphinity.pokemon.model.trainer.GymLeader;
 import nl.delphinity.pokemon.model.trainer.Trainer;
 
+import javax.xml.crypto.Data;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -15,9 +17,9 @@ import static nl.delphinity.pokemon.model.general.PokemonData.*;
 
 public class Game {
 
-    private static final ArrayList<Area> areas = new ArrayList<>();
+    public static final ArrayList<Area> areas = new ArrayList<>();
     private static final Scanner sc = new Scanner(System.in);
-    private static Trainer trainer = null;
+    public static Trainer trainer = null;
 
     //set up the game in this static block
 
@@ -65,18 +67,25 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome new trainer, what's your name?");
-        String name = sc.nextLine();
-        trainer = new Trainer(name, areas.get(0));
-        System.out.println("Hi, " + trainer.getName());
+        Trainer loadedSave = DataSaver.loadGame();
 
-        Pokemon firstPokemon = chooseFirstPokemon();
-        firstPokemon.setOwner(trainer);
-        trainer.getPokemonCollection().add(firstPokemon);
-        System.out.println("You now have " + trainer.getPokemonCollection().size() + " pokemon in your collection!");
+        if(loadedSave != null){
+            trainer = (Trainer) loadedSave;
+            System.out.println("Welcome back, " + trainer.getName() + "!");
+        }
+        else{
+            System.out.println("Welcome new trainer, what's your name?");
+            String name = sc.nextLine();
+            trainer = new Trainer(name, areas.get(0));
+            System.out.println("Hi, " + trainer.getName());
 
-        //game loop
-        while (true) {
+            Pokemon firstPokemon = chooseFirstPokemon();
+            firstPokemon.setOwner(trainer);
+            trainer.getPokemonCollection().add(firstPokemon);
+            System.out.println("You now have " + trainer.getPokemonCollection().size() + " pokemon in your collection!");
+        }
+
+        while(true) {
             showGameOptions();
         }
     }
@@ -137,7 +146,6 @@ public class Game {
     private static void findAndBattlePokemon() {
         Pokemon randomPokemon = trainer.findPokemon();
         Battle battle = new Battle(trainer.getActivePokemon(), randomPokemon, trainer);
-        System.out.println("z");
         battle.start();
     }
 
@@ -260,6 +268,28 @@ public class Game {
 
     //TODO: US-PKM-O-2:
     private static void quit() {
+        boolean valid = false;
+        System.out.println("Would you like to save the game?");
+        System.out.println("Yes/No");
+
+        while(!valid){
+            String choice = sc.nextLine().trim();
+            if(choice.toLowerCase().equals("yes")){
+                try{
+                    DataSaver.saveGame(trainer);
+                    valid = true;
+                } catch (Exception e){
+                    System.out.println("Error saving game: " + e.getMessage());
+                }
+            }
+            else if(choice.toLowerCase().equals("no")){
+                valid = true;
+            }
+            else {
+                System.out.println("Invalid input! Please enter 'Yes' or 'No'.");
+            }
+        }
+
         System.out.println("Thanks for playing! See you next time!");
         sc.close();
         System.exit(0);
