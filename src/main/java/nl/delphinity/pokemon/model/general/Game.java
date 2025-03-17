@@ -67,13 +67,21 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Trainer loadedSave = DataSaver.loadGame();
+        System.out.println("Would you like to start a new game or load a save?");
+        System.out.println("1 - New game");
+        System.out.println("2 - Load");
 
-        if(loadedSave != null){
-            trainer = (Trainer) loadedSave;
-            System.out.println("Welcome back, " + trainer.getName() + "!");
-        }
-        else{
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if(choice == 2){
+            Trainer loadedSave = DataSaver.loadGame();
+
+            if(loadedSave != null){
+                trainer = (Trainer) loadedSave;
+                System.out.println("Welcome back, " + trainer.getName() + "!");
+            }
+        } else {
             System.out.println("Welcome new trainer, what's your name?");
             String name = sc.nextLine();
             trainer = new Trainer(name, areas.get(0));
@@ -270,10 +278,12 @@ public class Game {
     private static void quit() {
         boolean valid = false;
         System.out.println("Would you like to save the game?");
-        System.out.println("Yes/No");
+        System.out.println("Yes / No");
 
         while(!valid){
             String choice = sc.nextLine().trim();
+            sc.nextLine();
+
             if(choice.toLowerCase().equals("yes")){
                 try{
                     DataSaver.saveGame(trainer);
@@ -289,7 +299,6 @@ public class Game {
                 System.out.println("Invalid input! Please enter 'Yes' or 'No'.");
             }
         }
-
         System.out.println("Thanks for playing! See you next time!");
         sc.close();
         System.exit(0);
